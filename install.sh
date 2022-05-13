@@ -27,28 +27,28 @@ function checkNode {
   _0="12"
   if [ $(($nodeVersion < $_0)) == 1 ]; then
     "echo" "-e" "Error: Required Node.js 14"
-    "exit" "1"
+    "exit" "1"  
 fi
   if [ "$nodeVersion" == "12" ]; then
-    "echo" "-e" "Warning: NodeJS ""$nodeVersion"" is not tested."
+    "echo" "-e" "Warning: NodeJS ""$nodeVersion"" is not tested."  
 fi
 }
 function deb {
   nodeCheck=$(node -v)
   apt --yes update
   if [ "$nodeCheck" != "" ]; then
-    "checkNode"
+    "checkNode" 
   else
     # Old nodejs binary name is "nodejs"
     check=$(nodejs --version)
     if [ "$check" != "" ]; then
       "echo" "-e" "Error: 'node' command is not found, but 'nodejs' command is found. Your NodeJS should be too old."
-      exit 1
+      exit 1    
 fi
     curlCheck=$(curl --version)
     if [ "$curlCheck" == "" ]; then
       "echo" "-e" "Installing Curl"
-      apt --yes install curl
+      apt --yes install curl    
 fi
     "echo" "-e" "Installing Node.js 14"
     curl -sL https://deb.nodesource.com/setup_14.x | bash - > log.txt
@@ -57,13 +57,13 @@ fi
     nodeCheckAgain=$(node -v)
     if [ "$nodeCheckAgain" == "" ]; then
       "echo" "-e" "Error during Node.js installation"
-      exit 1
+      exit 1    
 fi
   fi
   check=$(git --version)
   if [ "$check" == "" ]; then
     "echo" "-e" "Installing Git"
-    apt --yes install git
+    apt --yes install git  
 fi
 }
 if [ "$type" == "local" ]; then
@@ -75,11 +75,11 @@ if [ "$type" == "local" ]; then
     if [ -e "/etc/issue" ]; then
       os=$(head -n1 /etc/issue | cut -f 1 -d ' ')
       if [ "$os" == "Ubuntu" ]; then
-        distribution="ubuntu"
+        distribution="ubuntu"      
 fi
       if [ "$os" == "Debian" ]; then
-        distribution="debian"
-fi
+        distribution="debian"      
+fi    
 fi
   fi
   arch=$(uname -i)
@@ -91,7 +91,7 @@ fi
   else
     "read" "-p" "Listening Port [$defaultPort]: " "port"
     if [ "$port" == "" ]; then
-      port="$defaultPort"
+      port="$defaultPort"    
 fi
   fi
   if [ "$2" != "" ]; then
@@ -99,19 +99,19 @@ fi
   else
     "read" "-p" "Installation Path [$defaultInstallPath]: " "installPath"
     if [ "$installPath" == "" ]; then
-      installPath="$defaultInstallPath"
+      installPath="$defaultInstallPath"    
 fi
   fi
   # CentOS
   if [ "$distribution" == "rhel" ]; then
     nodeCheck=$(node -v)
     if [ "$nodeCheck" != "" ]; then
-      "checkNode"
+      "checkNode" 
     else
       curlCheck=$(curl --version)
       if [ "$curlCheck" == "" ]; then
         "echo" "-e" "Installing Curl"
-        yum -y -q install curl
+        yum -y -q install curl      
 fi
       "echo" "-e" "Installing Node.js 14"
       curl -sL https://rpm.nodesource.com/setup_14.x | bash - > log.txt
@@ -120,38 +120,38 @@ fi
       nodeCheckAgain=$(node -v)
       if [ "$nodeCheckAgain" == "" ]; then
         "echo" "-e" "Error during Node.js installation"
-        exit 1
+        exit 1      
 fi
     fi
     check=$(git --version)
     if [ "$check" == "" ]; then
       "echo" "-e" "Installing Git"
-      yum -y -q install git
+      yum -y -q install git    
 fi
     # Ubuntu
   else
     if [ "$distribution" == "ubuntu" ]; then
-      "deb"
+      "deb" 
       # Debian
     else
       if [ "$distribution" == "debian" ]; then
-        "deb"
+        "deb" 
       else
         # Unknown distribution
         error=$((0))
         check=$(git --version)
         if [ "$check" == "" ]; then
           error=$((1))
-          "echo" "-e" "Error: git is missing"
+          "echo" "-e" "Error: git is missing"        
 fi
         check=$(node -v)
         if [ "$check" == "" ]; then
           error=$((1))
-          "echo" "-e" "Error: node is missing"
+          "echo" "-e" "Error: node is missing"        
 fi
         if [ $(($error > 0)) == 1 ]; then
           "echo" "-e" "Please install above missing software"
-          exit 1
+          exit 1        
 fi
       fi
     fi
@@ -160,7 +160,7 @@ fi
   if [ "$check" == "" ]; then
     "echo" "-e" "Installing PM2"
     npm install pm2 -g && pm2 install pm2-logrotate
-    pm2 startup
+    pm2 startup  
 fi
   mkdir -p $installPath
   cd $installPath
@@ -172,7 +172,7 @@ else
   check=$(docker -v)
   if [ "$check" == "" ]; then
     "echo" "-e" "Error: docker is not found!"
-    exit 1
+    exit 1  
 fi
   check=$(docker info)
   if [[ "$check" == *"Is the docker daemon running"* ]]; then
@@ -184,7 +184,7 @@ fi
   else
     "read" "-p" "Expose Port [$defaultPort]: " "port"
     if [ "$port" == "" ]; then
-      port="$defaultPort"
+      port="$defaultPort"    
 fi
   fi
   if [ "$2" != "" ]; then
@@ -192,7 +192,7 @@ fi
   else
     "read" "-p" "Volume Name [$defaultVolume]: " "volume"
     if [ "$volume" == "" ]; then
-      volume="$defaultVolume"
+      volume="$defaultVolume"    
 fi
   fi
   "echo" "-e" "Port: $port"
